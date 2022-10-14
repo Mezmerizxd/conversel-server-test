@@ -12,7 +12,7 @@ const io = require('socket.io')(http, {
 // Middlewares
 expressApp.use(express.json());
 expressApp.use(cors());
-// Statics()
+Statics.initialize()
 
 // Import routers/sockets
 require('./routes/Api')(expressApp);
@@ -20,8 +20,8 @@ require('./routes/Sockets')(io);
 
 // Setup static server
 expressApp.use(express.static(path.join(__dirname, 'conversel-web')));
-expressApp.get('/*', (request, response) => {
-    response.sendFile(path.join(__dirname, 'conversel-web/index.html'));
+expressApp.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'conversel-web/index.html'));
 });
 
 // Start server
