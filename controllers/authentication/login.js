@@ -1,10 +1,10 @@
-const Generator = require("../../classes/Generator")
-const sjcl = require("sjcl")
-const Firebase = require("../../providers/Firebase");
+const Generator = require('../../classes/Generator');
+const sjcl = require('sjcl');
+const Firebase = require('../../providers/Firebase');
 
 module.exports = {
     async perform(req, res) {
-        console.log('Test Api Used');
+        console.log('LOGIN starting');
         const reqData = req.body;
 
         // TODO: Check request data
@@ -21,8 +21,12 @@ module.exports = {
             account = child.toJSON();
         });
         if (!account) {
-            // TODO: RESPONSE ERROR
-            console.log("no account found")
+            res.status(200).json({
+                success: false,
+                error: true,
+                errorMessage: 'Account does not exist',
+            });
+            console.log('no account found');
             return;
         }
 
@@ -32,8 +36,12 @@ module.exports = {
         );
 
         if (account.password !== encryptedPassword) {
-            // TODO: RESPONSE ERROR
-            console.log("passwords dont match")
+            res.status(200).json({
+                success: false,
+                error: true,
+                errorMessage: 'Passwords do not match',
+            });
+            console.log('passwords dont match');
             return;
         }
 
@@ -43,8 +51,12 @@ module.exports = {
         );
         const fbUserDataResp = (await fbUserData.get()).toJSON();
         if (!fbUserDataResp) {
-            // TODO: RESPONSE ERROR
-            console.log("no user data found")
+            res.status(200).json({
+                success: false,
+                error: true,
+                errorMessage: 'No user data found',
+            });
+            console.log('no user data found');
             return;
         }
 
@@ -55,9 +67,10 @@ module.exports = {
             errorMessage: null,
             data: {
                 userId: fbUserDataResp.userId,
-                username: fbUserDataResp.username
+                username: fbUserDataResp.username,
             },
-            authorization: fbUserDataResp.authorization
+            authorization: fbUserDataResp.authorization,
         });
+        console.log('LOGIN finished');
     },
 };

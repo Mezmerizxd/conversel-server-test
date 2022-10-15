@@ -1,25 +1,33 @@
-const Generator = require("../../classes/Generator")
-const sjcl = require("sjcl")
-const Firebase = require("../../providers/Firebase");
+const Generator = require('../../classes/Generator');
+const sjcl = require('sjcl');
+const Firebase = require('../../providers/Firebase');
 
 module.exports = {
     async perform(req, res) {
-        console.log("SIGNUP starting")
+        console.log('SIGNUP starting');
         const reqData = req.body;
 
         // TODO: Check if username is taken
         // TODO: Check if email is in use
 
-        const userId = await Generator.UserId()
+        const userId = await Generator.UserId();
         if (!userId.data) {
-            // TODO: RESPONSE ERROR
-            console.log("userId generator error")
+            res.status(200).json({
+                success: false,
+                error: true,
+                errorMessage: 'Something went wrong',
+            });
+            console.log('userId generator error');
             return;
         }
-        const token = await Generator.AuthorizationToken()
+        const token = await Generator.AuthorizationToken();
         if (!token.data) {
-            // TODO: RESPONSE ERROR
-            console.log("token generator error")
+            res.status(200).json({
+                success: false,
+                error: true,
+                errorMessage: 'Something went wrong',
+            });
+            console.log('token generator error');
             return;
         }
 
@@ -39,8 +47,8 @@ module.exports = {
             userId: userId.data,
             email: reqData.email,
             password: encryptedPassword,
-            creation_date: CreationDate
-        })
+            creation_date: CreationDate,
+        });
 
         // Insert user data
         const fbUserData = Firebase.database.ref(
@@ -50,15 +58,15 @@ module.exports = {
             userId: userId.data,
             username: reqData.username,
             authorization: token.data,
-            creation_date: CreationDate
-        })
+            creation_date: CreationDate,
+        });
 
         res.status(200).json({
             success: true,
             error: false,
             errorMessage: null,
-            authorization: token.data
+            authorization: token.data,
         });
-        console.log("SIGNUP finished")
+        console.log('SIGNUP finished');
     },
 };

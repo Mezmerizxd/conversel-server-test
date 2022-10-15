@@ -8,7 +8,7 @@ const Statics = require('./middlewares/Statics');
 const io = require('socket.io')(http, {
     cors: { origin: '*', methods: 'GET,HEAD,PUT,PATCH,POST,DELETE' },
 });
-const Firebase = require("./providers/Firebase")
+const Firebase = require('./providers/Firebase');
 
 // Middlewares
 expressApp.use(express.json());
@@ -16,7 +16,7 @@ expressApp.use(cors());
 // Statics.initialize()
 
 // Providers
-Firebase.initialize()
+Firebase.initialize();
 
 // Import routers/sockets
 require('./routes/Api')(expressApp);

@@ -1,4 +1,4 @@
-const Firebase = require("../providers/Firebase")
+const Firebase = require('../providers/Firebase');
 
 class Authorizer {
     App = async (token, resHandler) => {
@@ -7,8 +7,8 @@ class Authorizer {
                 resHandler.status(400).json({
                     success: false,
                     error: true,
-                    errorMessage: "No authorization token was passed."
-                })
+                    errorMessage: 'No authorization token was passed.',
+                });
             }
             return { authorized: false };
         }
@@ -23,18 +23,18 @@ class Authorizer {
             fbUserDataResp = child.toJSON();
         });
         if (fbUserDataResp) {
-            return { authorized: true, userData: fbUserDataResp };
+            return { ...fbUserDataResp, authorized: true };
         } else {
             if (resHandler) {
                 resHandler.status(400).json({
                     success: false,
                     error: true,
-                    errorMessage: "Refused authorization"
-                })
+                    errorMessage: 'Refused authorization',
+                });
             }
             return { authorized: false };
         }
-    }
+    };
 }
 
-module.exports = new Authorizer()
+module.exports = new Authorizer();
