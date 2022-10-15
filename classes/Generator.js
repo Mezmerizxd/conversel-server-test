@@ -22,10 +22,10 @@ class Generator {
                 console.log("AuthorizationToken - max attempts"); 
                 return {data: null}
             }
-            const dbUserAccount = Firebase.database.ref(
+            const fbUserAccount = Firebase.database.ref(
                 `conversel/user_accounts/${id}`
             );
-            const fbUserDataResp = (await dbUserAccount.get()).toJSON();
+            const fbUserDataResp = (await fbUserAccount.get()).toJSON();
             if (!fbUserDataResp)
                 created = true;
             attempts+=1
