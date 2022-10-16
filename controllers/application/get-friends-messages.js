@@ -5,7 +5,6 @@ module.exports = {
     async perform(req, res) {
         console.log('GETFRIENDSMESSAGES starting');
         const reqData = req.body;
-        console.log(reqData)
         const user = await Authorizer.App(req.headers.authorization, res);
         if (user.authorized) {
             let messages = [];

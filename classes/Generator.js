@@ -6,8 +6,27 @@ class Generator {
     #max_token_byte = 64;
     #max_attempts = 5;
 
-    DirectMessageId = async () => {};
-    DirectMessage_MessageId = async (directMessageId) => {};
+    DirectMessage_MessageId = async (directMessageId) => {
+        console.log('Generator - DirectMessage_MessageId starting');
+        let created = false;
+        let id = null;
+        let attempts = 0;
+        while (!created) {
+            id = Math.floor(Math.random() * this.#max_id_size);
+            if (attempts === this.#max_attempts) {
+                console.log('AuthorizationToken - max attempts');
+                return { data: null };
+            }
+            const fbUserAccount = Firebase.database.ref(
+                `conversel/direct_messages/${directMessageId}/messages/${id}`
+            );
+            const fbUserDataResp = (await fbUserAccount.get()).toJSON();
+            if (!fbUserDataResp) created = true;
+            attempts += 1;
+        }
+        console.log('Generator - DirectMessage_MessageId finished');
+        return { data: id };
+    };
     ChannelId = async (roomId) => {};
     ChannelMessageId = async (roomId, channelId) => {};
     RoomId = async () => {};
